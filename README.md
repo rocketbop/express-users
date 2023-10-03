@@ -1,6 +1,11 @@
-# Backend Engineer Work Sample
+# Small Express app
 
 This project skeleton contains a basic Express setup one endpoint to create a user and one endpoint to fetch all users, as well as a basic empty unit test.
+
+## Getting up and running
+
+-   `npm i`
+-   Run the tests
 
 ## Scripts
 
@@ -8,11 +13,18 @@ This project skeleton contains a basic Express setup one endpoint to create a us
 
 `npm test` executes the tests
 
-## Goal
+## API
 
-1. Adjust POST /users that it accepts a user and stores it in a database.
-    - The user should have a unique id, a name, a unique email address and a creation date
-2. Adjust GET /users that it returns (all) users from the database.
-    - This endpoint should be able to receive a query parameter `created` which sorts users by creation date ascending or descending.
+1. POST /users creates a user in the DB with unique id, a name, a unique email address and a creation date
+2. GET /users returns (all) users from the database.
+    - This endpoint takes a query parameter `created` which sorts users by creation date ascending or descending.
 
-Feel free to add or change this project as you like.
+## Libraries
+
+### Testing
+
+We use Jest with Supertest to making testing the API a breeze. We use SQLITE in memory for testing.
+
+### Persistence
+
+We use SQLITE in memory for testing. Sequelize provides the ORM.
