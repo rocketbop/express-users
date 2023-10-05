@@ -20,14 +20,16 @@ describe('POST /users', () => {
         expect(response.status).toBe(201);
     });
 
-    test('reports an error when a required param is missing', async () => {
-        const newUser = {};
+    test('reports an error when a validation fails', async () => {
+        const newUser = {
+            name: 'Bart Simpson',
+            email: 'bart',
+        };
 
         const response = await request(app).post('/users').send(newUser);
 
         expect(response.status).toBe(400);
-        expect(response.body['error']).toMatch(/User.name cannot be null/);
-        expect(response.body['error']).toMatch(/User.email cannot be null/);
+        expect(response.body['error']).toMatch(/Validation Error: Email is not valid/);
     });
 });
 
@@ -83,5 +85,31 @@ describe('GET /users', () => {
 
         expect(response.body[0]).toMatchObject({ name: 'Lisa Simpson' });
         expect(response.body[1]).toMatchObject({ name: 'Bart Simpson' });
+    });
+
+    test('it returns results sorted with oldest first for invalid string values of `created`', async () => {
+        await request(app).post('/users').send(newBartUser);
+        await request(app).post('/users').send(newLisaUser);
+
+        const response = await request(app)
+            .get('/users')
+            .query({ created: 'Unfinished monkey business' });
+
+        expect(response.status).toBe(200);
+
+        expect(response.body[0]).toMatchObject({ name: 'Bart Simpson' });
+        expect(response.body[1]).toMatchObject({ name: 'Lisa Simpson' });
+    });
+
+    test('it returns results sorted with oldest first for non string values of `created`', async () => {
+        await request(app).post('/users').send(newBartUser);
+        await request(app).post('/users').send(newLisaUser);
+
+        const response = await request(app).get('/users').query({ created: 10000 });
+
+        expect(response.status).toBe(200);
+
+        expect(response.body[0]).toMatchObject({ name: 'Bart Simpson' });
+        expect(response.body[1]).toMatchObject({ name: 'Lisa Simpson' });
     });
 });

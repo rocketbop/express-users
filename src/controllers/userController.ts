@@ -21,7 +21,7 @@ const create = async (req: Request, res: Response) => {
         const user = await UserService.create(name, email);
         res.status(201).json(user);
     } catch (error) {
-        if (error.name === 'SequelizeValidationError') {
+        if (/ValidationError/.test(error.name)) {
             res.status(400).json({ error: `Validation Error: ${error.message}` });
         } else {
             res.status(500).json({ error: `Internal Server Error` });

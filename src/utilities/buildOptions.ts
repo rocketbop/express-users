@@ -5,13 +5,18 @@
  * We only support one query param right now though
  */
 
+const SortDirections = {
+    ASC: 'ASC',
+    DESC: 'DESC',
+};
+
 interface QueryOptions {
     created?: string;
 }
 
 const buildOptions = (query: QueryOptions = {}) => {
     const created = query['created'];
-    if (created) {
+    if (created && (created === SortDirections.ASC || created === SortDirections.DESC)) {
         return {
             order: [['createdAt', created]],
         };
@@ -21,3 +26,5 @@ const buildOptions = (query: QueryOptions = {}) => {
 };
 
 export default buildOptions;
+export type { QueryOptions as QueryOptionsType };
+export { SortDirections };
