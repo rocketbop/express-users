@@ -1,6 +1,11 @@
-// controllers/userController.ts
+/**
+ * @module userController
+ * A controller module to separate out router from and dispatch and error
+ * handling logic
+ */
 import { Request, Response } from 'express';
 import User from '../models/user';
+import * as UserService from './../services/userService';
 
 interface QueryOptions {
     created?: string;
@@ -29,7 +34,7 @@ const index = async (req: Request, res: Response) => {
 const create = async (req: Request, res: Response) => {
     try {
         const { name, email } = req.body;
-        const user = await User.create({ name, email });
+        const user = await UserService.create(name, email);
         res.status(201).json(user);
     } catch (error) {
         if (error.name === 'SequelizeValidationError') {
