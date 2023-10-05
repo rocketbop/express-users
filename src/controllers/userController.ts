@@ -6,23 +6,7 @@
 import { Request, Response } from 'express';
 import User from '../models/user';
 import * as UserService from './../services/userService';
-
-interface QueryOptions {
-    created?: string;
-}
-
-// Sequelize takes an options object, that can be quite complex
-// We only support one query param right now though
-const buildOptions = (query: QueryOptions = {}) => {
-    const created = query['created'];
-    if (created) {
-        return {
-            order: [['createdAt', created]],
-        };
-    } else {
-        return {};
-    }
-};
+import buildOptions from '../utilities/buildOptions';
 
 const index = async (req: Request, res: Response) => {
     const options: any = buildOptions(req.query);
